@@ -1,0 +1,6 @@
+/.datasets/
+/.coverage/
+/node_modules/
+/chat/
+/me.md
+/next.md
