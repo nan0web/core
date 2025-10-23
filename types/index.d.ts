@@ -1,5 +1,6 @@
 export default AppCore;
+export type Language = import("./AppCore.js").Language;
 import AppCore from "./AppCore.js";
 import AppResult from "./AppResult.js";
-import AppShell from "./AppShell.js";
-export { AppCore, AppResult, AppShell };
+import { ExecutableCommand } from "@nan0web/protocol";
+export { AppCore, AppResult, ExecutableCommand };

@@ -1,11 +1,13 @@
+import { ExecutableCommand } from "@nan0web/protocol"
 import AppCore from "./AppCore.js"
 import AppResult from "./AppResult.js"
-import AppShell from "./AppShell.js"
+
+/** @typedef {import("./AppCore.js").Language} Language */
 
 export {
 	AppCore,
 	AppResult,
-	AppShell
+	ExecutableCommand,
 }
 
 export default AppCore
