@@ -6,10 +6,9 @@
 	"main": "src/index.js",
 	"types": "types/index.d.ts",
 	"files": [
-		"src/",
-		"types/",
-		"package.json",
-		"README.md"
+		"src/**/*.js",
+		"!src/**/*.test.js",
+		"types/**/*.d.ts"
 	],
 	"scripts": {
 		"build": "tsc",
@@ -19,7 +18,7 @@
 		"prepush": "npm test",
 		"prepare": "husky",
 		"prepublishOnly": "npm test && npm run build",
-		"playground": "node playground/main.js",
+		"play": "node play/main.js",
 		"release": "nan0release publish",
 		"test": "node --test",
 		"test:docs": "node --test src/README.md.js",
