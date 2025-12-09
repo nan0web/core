@@ -3,9 +3,9 @@
 Core application framework for nan0web providing a lightweight
 DB‑backed state container with built‑in internationalisation.
 
-|[Status](https://github.com/nan0web/monorepo/blob/main/system.md#написання-сценаріїв)|Documentation|Test coverage|Features|Npm version|
-|---|---|---|---|---|
- |🟢 `98.9%` |🧪 [English 🏴󠁧󠁢󠁥󠁮󠁧󠁿](https://github.com/nan0web/core/blob/main/README.md)<br />[Українською 🇺🇦](https://github.com/nan0web/core/blob/main/docs/uk/README.md) |🟢 `95.3%` |✅ d.ts 📜 system.md 🕹️ playground |— |
+|Package name|[Status](https://github.com/nan0web/monorepo/blob/main/system.md#написання-сценаріїв)|Documentation|Test coverage|Features|Npm version|
+|---|---|---|---|---|---|
+ |[@nan0web/core](https://github.com/nan0web/core/) |🟡 `83.1%` |🧪 [English 🏴󠁧󠁢󠁥󠁮󠁧󠁿](https://github.com/nan0web/core/blob/main/README.md)<br />[Українською 🇺🇦](https://github.com/nan0web/core/blob/main/docs/uk/README.md) |🟢 `95.3%` |📜 system.md 🕹️ playground |1.0.1 |
 
 ## Installation
 
