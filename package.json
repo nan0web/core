@@ -1,6 +1,6 @@
 {
 	"name": "@nan0web/core",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"description": "Core application framework for nan0web with database handling, internationalization, and interface connectivity",
 	"type": "module",
 	"main": "src/index.js",
