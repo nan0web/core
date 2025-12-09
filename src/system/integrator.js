@@ -24,6 +24,7 @@ export class AppIntegrator {
 	 * @returns {Promise<Record<string, any>>}
 	 */
 	async _loadConfig() {
+		// @ts-ignore Fix the load
 		const { default: cfg } = await import('../config/apps.json')
 		return cfg
 	}

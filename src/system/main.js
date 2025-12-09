@@ -24,7 +24,8 @@ async function bootstrapSystem() {
 	})
 
 	// Import and validate auth application
-	const { default: authApp } = await import('@nan0web/auth.app/src/register.js')
+		// @ts-ignore Fix the load of aith.app
+		const { default: authApp } = await import('@nan0web/auth.app/src/register.js')
 	const validationErrors = validator.validate(authApp, {
 		api: { prefix: 'auth' },
 		cli: { command: 'auth' },
