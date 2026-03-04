@@ -1,6 +1,6 @@
-import DB from "@nan0web/db"
-import { createT } from "@nan0web/i18n"
-import AppResult from "./AppResult.js"
+import DB from '@nan0web/db'
+import { createT } from '@nan0web/i18n'
+import AppResult from './AppResult.js'
 
 /** @typedef {{id: string, icon?: string, locale?: string}} Language */
 
@@ -16,15 +16,16 @@ import AppResult from "./AppResult.js"
  * @property {Function} t - Translation function
  */
 export default class AppCore {
+	static DB = DB
 	#initialized = false
 	/** @type {DB} */
 	db
 	/** @type {string} */
-	title = ""
+	title = ''
 	/** @type {string} */
-	uri = ""
+	uri = ''
 	/** @type {string} */
-	locale = "uk"
+	locale = 'uk'
 	/** @type {object} */
 	data = {}
 	/** @type {Record<string, Function>} */
@@ -34,18 +35,16 @@ export default class AppCore {
 	/** @type {Record<string, Language>} */
 	langs = {
 		en: {
-			id: "en",
-			icon: "🇬🇧",
-			locale: "en-GB"
-		}
+			id: 'en',
+			icon: '🇬🇧',
+			locale: 'en-GB',
+		},
 	}
-	/** @type {(key: string, replacements: Record<string, string>) => string} */
-	t = (key, replacements) => key
+	/** @type {(key: string, replacements?: Record<string, string>) => string} */
+	t = (key, replacements = {}) => key
 	/**
 	 * Create an AppCore instance
-	 * @param {object} config - Application configuration
-	 * @param {DB} config.db - Database instance
-	 * @param {string} [config.locale='uk'] - Locale identifier 2 or 5 chars: "uk" | "uk-UA"
+	 * @param {object} input - Application configuration
 	 */
 	constructor(input = {}) {
 		const {
@@ -59,8 +58,8 @@ export default class AppCore {
 			langs = this.langs,
 			t = this.t,
 		} = input
-		if (!(db instanceof DB)) {
-			throw new Error("Database must be an instance of @nan0web/db.DB")
+		if (db && typeof db.fetch !== 'function') {
+			throw new Error('Database must be an instance of @nan0web/db.DB')
 		}
 		this.db = db
 		this.title = String(title)
@@ -79,7 +78,7 @@ export default class AppCore {
 	 * @returns {Promise<void>}
 	 */
 	async bootstrapI18n(path = `/i18n/{{locale}}.json`) {
-		const [code, country] = this.locale.split("-")
+		const [code, country] = this.locale.split('-')
 		let uri = path.replace('{{locale}}', this.locale)
 		let i18n = await this.db.fetch(uri, { defaultValue: null })
 		if (null === i18n && country) {
@@ -109,7 +108,7 @@ export default class AppCore {
 			data: this.data,
 			actions: this.actions,
 			meta: this.meta,
-			t: this.t
+			t: this.t,
 		}
 	}
 

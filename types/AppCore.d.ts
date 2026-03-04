@@ -11,14 +11,13 @@
  * @property {Function} t - Translation function
  */
 export default class AppCore {
+    static DB: typeof DB;
     static from(input: any): AppCore;
     /**
      * Create an AppCore instance
-     * @param {object} config - Application configuration
-     * @param {DB} config.db - Database instance
-     * @param {string} [config.locale='uk'] - Locale identifier 2 or 5 chars: "uk" | "uk-UA"
+     * @param {object} input - Application configuration
      */
-    constructor(input?: {});
+    constructor(input?: object);
     /** @type {DB} */
     db: DB;
     /** @type {string} */
@@ -35,8 +34,8 @@ export default class AppCore {
     meta: object;
     /** @type {Record<string, Language>} */
     langs: Record<string, Language>;
-    /** @type {(key: string, replacements: Record<string, string>) => string} */
-    t: (key: string, replacements: Record<string, string>) => string;
+    /** @type {(key: string, replacements?: Record<string, string>) => string} */
+    t: (key: string, replacements?: Record<string, string>) => string;
     /**
      * Bootstrap internationalization by loading translations from database
      * @param {string} path - Path to i18n file with locale placeholder
@@ -71,5 +70,5 @@ export type Language = {
     icon?: string;
     locale?: string;
 };
-import DB from "@nan0web/db";
-import AppResult from "./AppResult.js";
+import DB from '@nan0web/db';
+import AppResult from './AppResult.js';

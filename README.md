@@ -3,9 +3,7 @@
 Core application framework for nan0web providing a lightweight
 DB‑backed state container with built‑in internationalisation.
 
-|Package name|[Status](https://github.com/nan0web/monorepo/blob/main/system.md#написання-сценаріїв)|Documentation|Test coverage|Features|Npm version|
-|---|---|---|---|---|---|
- |[@nan0web/core](https://github.com/nan0web/core/) |🟢 `99.1%` |🧪 [English 🏴󠁧󠁢󠁥󠁮󠁧󠁿](https://github.com/nan0web/core/blob/main/README.md)<br />[Українською 🇺🇦](https://github.com/nan0web/core/blob/main/docs/uk/README.md) |🟢 `95.3%` |✅ d.ts 📜 system.md 🕹️ playground |1.0.1 |
+<!-- %PACKAGE_STATUS% -->
 
 ## Installation
 
@@ -32,7 +30,7 @@ How to instantiate AppCore?
 ```js
 import { AppCore } from "@nan0web/core"
 const db = new DB()
-const core = new AppCore({ db, title: "Demo", uri: "/demo", locale: "en" })
+const core = new AppCore({ db, title: 'Demo', uri: '/demo', locale: 'en' })
 console.info(core.title) // ← Demo
 console.info(core.uri) // ← /demo
 ```
@@ -43,14 +41,12 @@ Load translation JSON from the DB and obtain a translation function.
 How does bootstrapI18n load translations?
 ```js
 const db = new DB({
-	predefined: [
-		["i18n/uk.json", { "hello": "Вітаю!" }]
-	]
+	predefined: [['i18n/uk.json', { hello: 'Вітаю!' }]],
 })
 await db.connect()
-const core = new AppCore({ db, locale: "uk" })
+const core = new AppCore({ db, locale: 'uk' })
 await core.init()
-const result = core.t("hello")
+const result = core.t('hello')
 console.info(result) // ← Вітаю!
 ```
 ## State inspection
@@ -66,7 +62,7 @@ const state = core.state()
 How to create an AppResult instance?
 ```js
 import { AppResult } from "@nan0web/core"
-const res = new AppResult({ content: "Done", priority: 2, meta: { ok: true } })
+const res = new AppResult({ content: 'Done', priority: 2, meta: { ok: true } })
 console.info(res.content[0]) // ← Done
 ```
 ## run() contract

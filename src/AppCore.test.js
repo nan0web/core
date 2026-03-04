@@ -52,8 +52,8 @@ describe('AppCore', () => {
 			},
 			{
 				name: 'Error',
-				message: 'AppCore: run() must be implemented'
-			}
+				message: 'AppCore: run() must be implemented',
+			},
 		)
 	})
 })
