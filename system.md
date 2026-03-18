@@ -1,3 +1,5 @@
+[Read in English](docs/en/system.md)
+
 # 🔍 Детальна Архітектура AppCore + Multi-Renderer System
 
 ## 🧩 Основні Принципи Interaction Design System
