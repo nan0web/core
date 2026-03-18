@@ -444,106 +444,95 @@ flowchart LR
 
 ---
 
-## 🏆 Golden Standard: Створення Додатка (AppCore)
+## 🏆 Golden Standard v2: Model as App (Без AppCore)
 
-Кожен мікро-додаток у системі NaN•Web (наприклад, з теки `apps/`) наслідує єдиний архітектурний стандарт. Він не імпортує UI-компоненти безпосередньо (агностичність), натомість він працює як генератор інтерфейсів (повертає Data-Driven об'єкти) або потоків намірів через `AppResult`.
+Поглиблений аналіз архітектури реальних додатків (`editor.app`, `llimo.app`, `auth.app`, `share.app`) показав, що `AppCore` є надлишковою (legacy) абстракцією. Замість створення окремого великого ядра, **найпростіший та найефективніший стандарт для додатку — це звичайна `Model`**.
 
-**Ключові Правила Золотого Стандарту:**
-1. **Наслідування**: Головний клас додатку завжди екстендить `AppCore`.
-2. **Семантика (static UI)**: Додаток має статичний блок `UI`, який визначає його метадані (назва, іконка, опис). 
-3. **Ізоляція Стану**: Локальний стан (state) інкапсулюється в `this.appState` або `this.data` у конструкторі.
-4. **Єдина точка входу (`run`)**: Логіка ініціалізується через метод `run()`, де завжди першим викликається `await super.init()` для завантаження міжнародних локалей (`this.t`).
-5. **Data-Driven Rendering**: Додаток ніколи не малює HTML/CLI; він повертає JSON-сумісне дерево (`$content`), яке OLMUI рендерери перетворюють на нативні компоненти.
+Кожен додаток — це просто `Model` (сувора Data-схема), яка розширює свою поведінку методом `run()` та бізнес-логікою. Усі необхідні зовнішні інструменти (БД, переклади, середовище) передаються через гарантований системою другий аргумент `options`.
 
-### Класичний Приклад (Еталон)
+**Ключові Правила Золотого Стандарту v2:**
+1. **Наслідування**: Додаток екстендить базовий `Model` з `@nan0web/core` (`AppCore` поступово виводиться з експлуатації).
+2. **State & Metadata**: Усі змінні стану додатку декларуються як `static` поля (Model-as-Schema). Додаток миттєво отримує їх типізацію, валідацію, default limit.
+3. **Залежності (Inversion of Control)**: Додаток ніколи не створює `DB` чи `t` самостійно. Вони ін'єктуються ранером через `new AppModel(data, { db, t })`. Доступ іде через вбудований геттер `this.db` або `this._.t`.
+4. **Виконання (`run`)**: Додаток гарантує точку входу `run()` (асинхронну або генератор), повертаючи `AppResult` з `$content` блоками OLMUI.
+
+### Еталонний Приклад (Model as App)
 
 ```javascript
-import { AppCore, AppResult } from '@nan0web/core'
+import { Model, AppResult } from '@nan0web/core'
 
 /**
  * @docs
  * # ClassicApp
- * Демонстрація золотого стандарту побудови додатків на базі AppCore.
+ * Демонстрація золотого стандарту v2 побудови додатків на базі Model.
  */
-export default class ClassicApp extends AppCore {
-    // 1. Метадані сутності (Model-as-Schema)
+export default class ClassicApp extends Model {
     static UI = {
         title: 'Classic Application',
-        description: 'Template for the golden standard app',
+        description: 'Template for the golden standard v2 app',
         icon: '🥇'
     }
 
-    constructor(options = {}) {
-        super(options)
-        // 2. Ізольований стан додатку
-        this.appState = {
-            count: options.data?.count || 0,
-            status: 'idle',
-            error: ''
-        }
+    // 1. Метадані стану (Model-as-Schema)
+    static count = { default: 0 }
+    static status = { default: 'idle', options: ['idle', 'saved', 'error'] }
+    static errorMessage = { default: '' }
+
+    /**
+     * @param {object} data - Первинні дані/стан додатку
+     * @param {object} options - Залежності середовища (db, t, renderer)
+     */
+    constructor(data = {}, options = {}) {
+        super(data, options)
+        // super автоматично розгорне count, status, errorMessage 
+        // та зробить доступним this.db і this._ (options)
     }
 
     /**
-     * 3. Основна точка входу в додаток
-     * @returns {Promise<AppResult>}
+     * 2. Основна точка входу (Run)
      */
     async run() {
-        await super.init() // Завантаження перекладів this.t()
-        
         return new AppResult({
             content: this._renderView()
         })
     }
 
     /**
-     * 4. Обробник бізнес-дії (Action)
+     * 3. Бізнес діюча логіка
      */
     async submit(newCount) {
+        const t = this._.t || ((k) => k) // Доступ до t з options
+        
         if (newCount < 0) {
-            this.appState.error = this.t('Number cannot be negative')
+            this.errorMessage = t('Number cannot be negative')
+            this.status = 'error'
             return new AppResult({ content: this._renderView() })
         }
 
-        this.appState.count = Number(newCount)
-        this.appState.status = 'saved'
-        this.appState.error = ''
+        this.count = Number(newCount)
+        this.status = 'saved'
+        this.errorMessage = ''
         
-        return new AppResult({
-            content: this._renderView()
-        })
+        return new AppResult({ content: this._renderView() })
     }
 
     /**
-     * 5. Генерація Data-Driven UI (OLMUI Pattern)
+     * 4. OLMUI Data-Driven Функція Рендеру
      */
     _renderView() {
+        const t = this._.t || ((k) => k)
+
         return [
             {
                 form: {
                     $class: 'classic-form',
-                    // Прив'язка дії до форми
-                    $onSubmit: (data) => this.submit(data.count),
+                    $onSubmit: (formData) => this.submit(formData.count),
                     content: [
-                        {
-                            Input: {
-                                type: 'number',
-                                value: this.appState.count,
-                                placeholder: this.t('Введіть кількість'),
-                                name: 'count'
-                            }
-                        },
-                        this.appState.error && {
-                            Alert: this.appState.error,
-                            $variant: 'danger'
-                        },
-                        this.appState.status === 'saved' && {
-                            Alert: this.t('Успішно збережено!'),
-                            $variant: 'success'
-                        },
-                        {
-                            Button: { $t: 'Зберегти', $variant: 'primary', type: 'submit' }
-                        }
-                    ].filter(Boolean) // Очищення порожніх блоків стану
+                        { Input: { type: 'number', value: this.count, name: 'count' } },
+                        this.status === 'error' && { Alert: this.errorMessage, $variant: 'danger' },
+                        this.status === 'saved' && { Alert: t('Збережено!'), $variant: 'success' },
+                        { Button: { $t: 'Зберегти', type: 'submit' } }
+                    ].filter(Boolean)
                 }
             }
         ]
