@@ -441,3 +441,112 @@ flowchart LR
 - Створює структуру, яка **не вимагає примусу** для роботи
 
 Перше, що треба реалізувати - **спільний інтерфейс рендерера**, який буде підключати всі різні UI-фреймворки через єдину точку входу, **зберігаючи незалежність логіки додатку від UI**.
+
+---
+
+## 🏆 Golden Standard: Створення Додатка (AppCore)
+
+Кожен мікро-додаток у системі NaN•Web (наприклад, з теки `apps/`) наслідує єдиний архітектурний стандарт. Він не імпортує UI-компоненти безпосередньо (агностичність), натомість він працює як генератор інтерфейсів (повертає Data-Driven об'єкти) або потоків намірів через `AppResult`.
+
+**Ключові Правила Золотого Стандарту:**
+1. **Наслідування**: Головний клас додатку завжди екстендить `AppCore`.
+2. **Семантика (static UI)**: Додаток має статичний блок `UI`, який визначає його метадані (назва, іконка, опис). 
+3. **Ізоляція Стану**: Локальний стан (state) інкапсулюється в `this.appState` або `this.data` у конструкторі.
+4. **Єдина точка входу (`run`)**: Логіка ініціалізується через метод `run()`, де завжди першим викликається `await super.init()` для завантаження міжнародних локалей (`this.t`).
+5. **Data-Driven Rendering**: Додаток ніколи не малює HTML/CLI; він повертає JSON-сумісне дерево (`$content`), яке OLMUI рендерери перетворюють на нативні компоненти.
+
+### Класичний Приклад (Еталон)
+
+```javascript
+import { AppCore, AppResult } from '@nan0web/core'
+
+/**
+ * @docs
+ * # ClassicApp
+ * Демонстрація золотого стандарту побудови додатків на базі AppCore.
+ */
+export default class ClassicApp extends AppCore {
+    // 1. Метадані сутності (Model-as-Schema)
+    static UI = {
+        title: 'Classic Application',
+        description: 'Template for the golden standard app',
+        icon: '🥇'
+    }
+
+    constructor(options = {}) {
+        super(options)
+        // 2. Ізольований стан додатку
+        this.appState = {
+            count: options.data?.count || 0,
+            status: 'idle',
+            error: ''
+        }
+    }
+
+    /**
+     * 3. Основна точка входу в додаток
+     * @returns {Promise<AppResult>}
+     */
+    async run() {
+        await super.init() // Завантаження перекладів this.t()
+        
+        return new AppResult({
+            content: this._renderView()
+        })
+    }
+
+    /**
+     * 4. Обробник бізнес-дії (Action)
+     */
+    async submit(newCount) {
+        if (newCount < 0) {
+            this.appState.error = this.t('Number cannot be negative')
+            return new AppResult({ content: this._renderView() })
+        }
+
+        this.appState.count = Number(newCount)
+        this.appState.status = 'saved'
+        this.appState.error = ''
+        
+        return new AppResult({
+            content: this._renderView()
+        })
+    }
+
+    /**
+     * 5. Генерація Data-Driven UI (OLMUI Pattern)
+     */
+    _renderView() {
+        return [
+            {
+                form: {
+                    $class: 'classic-form',
+                    // Прив'язка дії до форми
+                    $onSubmit: (data) => this.submit(data.count),
+                    content: [
+                        {
+                            Input: {
+                                type: 'number',
+                                value: this.appState.count,
+                                placeholder: this.t('Введіть кількість'),
+                                name: 'count'
+                            }
+                        },
+                        this.appState.error && {
+                            Alert: this.appState.error,
+                            $variant: 'danger'
+                        },
+                        this.appState.status === 'saved' && {
+                            Alert: this.t('Успішно збережено!'),
+                            $variant: 'success'
+                        },
+                        {
+                            Button: { $t: 'Зберегти', $variant: 'primary', type: 'submit' }
+                        }
+                    ].filter(Boolean) // Очищення порожніх блоків стану
+                }
+            }
+        ]
+    }
+}
+```
