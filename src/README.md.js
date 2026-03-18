@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import FS from '@nan0web/db-fs'
 import { NoConsole } from '@nan0web/log'
 import { DocsParser, DatasetParser } from '@nan0web/test'
-import { AppCore, AppResult, ExecutableCommand } from './index.js'
+import { AppCore, AppResult, ExecutableCommand, ProjectModel } from './index.js'
 import DB from '@nan0web/db'
 
 /**
@@ -154,6 +154,21 @@ function testRender() {
 				message: 'AppCore: run() must be implemented',
 			},
 		)
+	})
+
+	/**
+	 * @docs
+	 * ## AppCore Static Meta
+	 *
+	 * Core components like `AppCore` and `ProjectModel` implement a `static UI`
+	 * metadata block defining their semantic display defaults according to the system contract.
+	 */
+	it('How to get semantic static UI data?', () => {
+		//import { AppCore, ProjectModel } from "@nan0web/core"
+		console.info(`${AppCore.UI.icon} ${AppCore.UI.title}`) // ← ⚙️ Application Core
+		assert.equal(AppCore.UI.title, 'Application Core')
+		assert.equal(AppCore.UI.icon, '⚙️')
+		assert.equal(ProjectModel.UI.title, 'Project Data')
 	})
 
 	/**

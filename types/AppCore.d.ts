@@ -12,6 +12,38 @@
  */
 export default class AppCore {
     static DB: typeof DB;
+    static UI: {
+        title: string;
+        description: string;
+        icon: string;
+    };
+    static title: {
+        default: string;
+    };
+    static uri: {
+        default: string;
+    };
+    static locale: {
+        default: string;
+    };
+    static data: {
+        default: {};
+    };
+    static actions: {
+        default: {};
+    };
+    static meta: {
+        default: {};
+    };
+    static langs: {
+        default: {
+            en: {
+                id: string;
+                icon: string;
+                locale: string;
+            };
+        };
+    };
     static from(input: any): AppCore;
     /**
      * Create an AppCore instance

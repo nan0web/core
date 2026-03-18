@@ -75,6 +75,16 @@ const db = new DB()
 const core = new AppCore({ db })
 await core.run() // ← throws an error → AppCore: run() must be implemented
 ```
+## AppCore Static Meta
+
+Core components like `AppCore` and `ProjectModel` implement a `static UI`
+metadata block defining their semantic display defaults according to the system contract.
+
+How to get semantic static UI data?
+```js
+import { AppCore, ProjectModel } from "@nan0web/core"
+console.info(`${AppCore.UI.icon} ${AppCore.UI.title}`) // ← ⚙️ Application Core
+```
 ## Contributing
 
 How to contribute? - [check here](./CONTRIBUTING.md)

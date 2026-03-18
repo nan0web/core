@@ -138,6 +138,26 @@ classDiagram
 
 ---
 
+## 🏷️ Стандарт `static UI` для метаданих моделі
+
+Метадані моделі або додатку, які відповідають за її візуалізацію в UI (CLI, Web, Mobile), об'єднуються у статичний об'єкт `static UI`. Цей об'єкт формалізує відображення сутності на рівні моделі.
+
+**Контракт:**
+- `title` *(string)* — Назва моделі або сутності.
+- `description` *(string, необов'язково)* — Опис логіки або цілей цієї моделі.
+- `icon` *(string, необов'язково)* — Emoji або SVG рядок для ідентифікації.
+
+**Приклад (AppCore.js):**
+```js
+export default class AppCore {
+  static UI = {
+    title: 'Application Core',
+    description: 'Base application logic and state container',
+    icon: '⚙️',
+  }
+}
+```
+
 ## 🔄 Механізм Рендерерів: Інтерфейс та Зв'язок з AppCore
 
 ### CustomRendererInterface (архітектурне ядро)

@@ -1,3 +1,4 @@
 {
-	"ignore": ["src/README.md.js", "types/**"]
+	"ignore": ["src/README.md.js", "types/**"],
+	"ignoreDependencies": ["@nan0web/db", "@nan0web/i18n", "@nan0web/protocol"]
 }

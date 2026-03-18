@@ -1,5 +1,6 @@
 import DB from '@nan0web/db'
 import { createT } from '@nan0web/i18n'
+import { resolveDefaults } from '@nan0web/types'
 import AppResult from './AppResult.js'
 
 /** @typedef {{id: string, icon?: string, locale?: string}} Language */
@@ -17,59 +18,67 @@ import AppResult from './AppResult.js'
  */
 export default class AppCore {
 	static DB = DB
+	static UI = {
+		title: 'Application Core',
+		description: 'Base application logic and state container',
+		icon: '⚙️',
+	}
+
+	static title = { default: '' }
+	static uri = { default: '' }
+	static locale = { default: 'uk' }
+	static data = { default: {} }
+	static actions = { default: {} }
+	static meta = { default: {} }
+	static langs = {
+		default: {
+			en: {
+				id: 'en',
+				icon: '🇬🇧',
+				locale: 'en-GB',
+			},
+		},
+	}
+
 	#initialized = false
 	/** @type {DB} */
 	db
 	/** @type {string} */
-	title = ''
+	title
 	/** @type {string} */
-	uri = ''
+	uri
 	/** @type {string} */
-	locale = 'uk'
+	locale
 	/** @type {object} */
-	data = {}
+	data
 	/** @type {Record<string, Function>} */
-	actions = {}
+	actions
 	/** @type {object} */
-	meta = {}
+	meta
 	/** @type {Record<string, Language>} */
-	langs = {
-		en: {
-			id: 'en',
-			icon: '🇬🇧',
-			locale: 'en-GB',
-		},
-	}
+	langs
 	/** @type {(key: string, replacements?: Record<string, string>) => string} */
 	t = (key, replacements = {}) => key
+
 	/**
 	 * Create an AppCore instance
 	 * @param {object} input - Application configuration
 	 */
 	constructor(input = {}) {
-		const {
-			db,
-			title = this.title,
-			uri = this.uri,
-			locale = this.locale,
-			data = this.data,
-			actions = this.actions,
-			meta = this.meta,
-			langs = this.langs,
-			t = this.t,
-		} = input
-		if (db && typeof db.fetch !== 'function') {
+		if (input.db && typeof input.db.fetch !== 'function') {
 			throw new Error('Database must be an instance of @nan0web/db.DB')
 		}
-		this.db = db
-		this.title = String(title)
-		this.uri = String(uri)
-		this.locale = String(locale)
-		this.data = data
-		this.actions = actions
-		this.meta = meta
-		this.langs = langs
-		this.t = t
+		/** @type {any} */
+		const resolved = resolveDefaults(AppCore, { ...input })
+
+		this.db = /** @type {DB} */ (resolved.db)
+		this.title = String(resolved.title)
+		this.uri = String(resolved.uri)
+		this.locale = String(resolved.locale)
+		this.data = resolved.data
+		this.actions = resolved.actions
+		this.meta = resolved.meta
+		this.langs = resolved.langs
 	}
 
 	/**
