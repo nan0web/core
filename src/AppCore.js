@@ -132,7 +132,7 @@ export default class AppCore {
 	}
 
 	static from(input) {
-		if (input instanceof AppCore) return input
-		return new AppCore(input)
+		if (input instanceof this) return input
+		return new this(input)
 	}
 }
