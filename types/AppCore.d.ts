@@ -64,8 +64,10 @@ export default class AppCore {
     actions: Record<string, Function>;
     /** @type {object} */
     meta: object;
-    /** @type {Record<string, Language>} */
-    langs: Record<string, Language>;
+    /** @type {object} */
+    langs: object;
+    /** @type {object} */
+    element: object;
     /** @type {(key: string, replacements?: Record<string, string>) => string} */
     t: (key: string, replacements?: Record<string, string>) => string;
     /**

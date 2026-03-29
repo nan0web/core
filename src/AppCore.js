@@ -55,8 +55,10 @@ export default class AppCore {
 	actions
 	/** @type {object} */
 	meta
-	/** @type {Record<string, Language>} */
+	/** @type {object} */
 	langs
+	/** @type {object} */
+	element
 	/** @type {(key: string, replacements?: Record<string, string>) => string} */
 	t = (key, replacements = {}) => key
 
@@ -79,6 +81,7 @@ export default class AppCore {
 		this.actions = resolved.actions
 		this.meta = resolved.meta
 		this.langs = resolved.langs
+		this.element = resolved.element || input.element || {}
 	}
 
 	/**

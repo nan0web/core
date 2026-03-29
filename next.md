@@ -1,11 +1,11 @@
 # @nan0web/core — Next Steps
 
-> v1.1.0 — **test ✅ test:docs ✅ build ✅ knip ✅**
+> v1.1.2 — **test ✅ test:docs ✅ build ✅ knip ✅**
 > Перевірено: 2026-03-18 — 19 tests, 13 docs, 0 fail
 
 ---
 
-## ✅ Виконано (v1.0.4–1.1.0)
+## ✅ Виконано (v1.0.4–1.1.2)
 
 - [x] ProvenDoc — `CONTRIBUTING.md` + fix `loadDocument` для `.md`
 - [x] Видалено 9 мертвих файлів (registry/_, system/_, bin/)
@@ -16,6 +16,7 @@
 - [x] Експортовано `Model` та `ProjectModel` з index.js
 - [x] Додано тести для Model + ProjectModel (19 tests total)
 - [x] Виправлено ES class field initializer gotcha (instance fields overwrite super() data)
+- [x] **CORE-13**: AppCore.from() polymorphism fix (inheritance stability for micro-apps)
 - [x] Оновлено knip.json — ignoreDependencies для workspace:\* протоколу
 
 ---
@@ -121,6 +122,13 @@ user.validate() // throws ModelError({ email: 'Invalid email' })
 - [x] Визначити контракт для `static UI` (title, description, icon?)
 - [x] Документувати в system.md
 - [x] Додати тест на контракт у README.md.js
+
+### CORE-13: AppCore Inheritance Stability
+
+> `.from()` метод в `AppCore` раніше створював екземпляр базового класу, що ламало успадкування методу `run()`.
+
+- [x] Виправлено `.from()`: `new AppCore(input)` → `new this(input)`
+- [x] Тести: Перевірка через `Element.jsx` (UIRoot) підтвердила завантаження спадкоємців
 
 ---
 
