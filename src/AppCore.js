@@ -17,7 +17,10 @@ import AppResult from './AppResult.js'
  * @property {Function} t - Translation function
  */
 export default class AppCore {
-	static DB = DB
+	static get DB() {
+		return DB
+	}
+
 	static UI = {
 		title: 'Application Core',
 		description: 'Base application logic and state container',

@@ -1,6 +1,8 @@
 import { describe, it } from 'node:test'
 import assert from 'node:assert/strict'
-import { Model, ProjectModel, ModelError } from './index.js'
+import { Model } from './Model.js'
+import { ProjectModel } from './ProjectModel.js'
+import { ModelError } from '@nan0web/types'
 
 describe('Model', () => {
 	it('creates instance with default values', () => {
@@ -13,10 +15,10 @@ describe('Model', () => {
 		assert.equal(m.foo, 'bar')
 	})
 
-	it('exposes db from options', () => {
+	it('exposes db from options via _', () => {
 		const fakeDb = { fetch: () => {} }
 		const m = new Model({}, { db: fakeDb })
-		assert.equal(m.db, fakeDb)
+		assert.equal(m._.db, fakeDb)
 	})
 
 	it('exposes _ (options) accessor', () => {

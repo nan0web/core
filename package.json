@@ -1,6 +1,6 @@
 {
 	"name": "@nan0web/core",
-	"version": "1.1.2",
+	"version": "1.1.3",
 	"description": "Core application framework for nan0web with database handling, internationalization, and interface connectivity",
 	"type": "module",
 	"main": "src/index.js",
@@ -12,8 +12,8 @@
 		"types/**/*.d.ts"
 	],
 	"scripts": {
-		"build": "tsc",
-		"clean": "rm -rf .cache/ && rm -rf dist/",
+		"build": "rm -rf types && tsc",
+		"clean": "rm -rf .cache/ && rm -rf dist/ && rm -rf types/",
 		"clean:modules": "rm -rf node_modules",
 		"precommit": "npm test",
 		"prepush": "npm test",
@@ -45,15 +45,15 @@
 	"license": "ISC",
 	"packageManager": "pnpm@10.11.0",
 	"devDependencies": {
-		"@nan0web/release": "^1.0.2",
-		"@nan0web/test": "^1.1.3",
+		"@nan0web/release": "workspace:*",
+		"@nan0web/test": "workspace:*",
 		"husky": "^9.1.7",
 		"knip": "^5.86.0"
 	},
 	"dependencies": {
-		"@nan0web/db": "^1.4.3",
-		"@nan0web/i18n": "^1.3.0",
-		"@nan0web/protocol": "^2.0.0",
-		"@nan0web/types": "^1.6.0"
+		"@nan0web/db": "workspace:*",
+		"@nan0web/i18n": "workspace:*",
+		"@nan0web/protocol": "workspace:*",
+		"@nan0web/types": "workspace:*"
 	}
 }

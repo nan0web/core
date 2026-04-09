@@ -11,7 +11,7 @@
  * @property {Function} t - Translation function
  */
 export default class AppCore {
-    static DB: typeof DB;
+    static get DB(): typeof DB;
     static UI: {
         title: string;
         description: string;
